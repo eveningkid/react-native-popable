@@ -32,7 +32,7 @@ const DEFAULT_LAYOUT = {
   y: 0,
 };
 
-export default ({
+const Popable = ({
   action = 'press',
   animated,
   animationType,
@@ -211,3 +211,5 @@ const styles = StyleSheet.create({
     top: '100%',
   },
 });
+
+export default Popable;

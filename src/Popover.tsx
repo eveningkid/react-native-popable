@@ -22,7 +22,7 @@ export type PopoverProps = {
   position?: 'top' | 'right' | 'bottom' | 'left';
 } & ViewProps;
 
-export default React.forwardRef<View, PopoverProps>(
+const Popover = React.forwardRef<View, PopoverProps>(
   (
     {
       animated = true,
@@ -164,3 +164,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default Popover;
