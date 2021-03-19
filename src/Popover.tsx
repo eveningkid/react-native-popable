@@ -64,7 +64,7 @@ export default ({
     prevVisible.current = visible;
 
     return () => animation?.stop();
-  }, [visible]);
+  }, [visible, animated, animationType, opacity]);
 
   const caret = (
     <Caret
