@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
+import {
+  LayoutChangeEvent,
+  // @ts-ignore
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Popover, { PopoverProps } from './Popover';
 
 export type PropableProps = {
