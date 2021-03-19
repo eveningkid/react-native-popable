@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  LayoutChangeEvent,
   // @ts-ignore
   Pressable,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import Popover, { PopoverProps } from './Popover';
@@ -20,8 +20,16 @@ export type PropableProps = {
   numberOfLines?: PopoverProps['numberOfLines'];
   onAction?: (visible: boolean) => void;
   position?: PopoverProps['position'];
+  strictPosition?: boolean;
   style?: PopoverProps['style'];
   visible?: boolean;
+};
+
+const DEFAULT_LAYOUT = {
+  width: 0,
+  height: 0,
+  x: 0,
+  y: 0,
 };
 
 export default ({
@@ -36,14 +44,19 @@ export default ({
   numberOfLines,
   onAction,
   position = 'top',
+  strictPosition = false,
   style,
   visible,
 }: PropableProps) => {
+  const dimensions = useWindowDimensions();
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [popoverOffset, setPopoverOffset] = useState({ left: 0, top: 0 });
-  const [popoverLayout, setPopoverLayout] = useState({ width: 0, height: 0 });
-  const [childrenLayout, setChildrenLayout] = useState({ width: 0, height: 0 });
+  const [popoverLayout, setPopoverLayout] = useState(DEFAULT_LAYOUT);
+  const [childrenLayout, setChildrenLayout] = useState(DEFAULT_LAYOUT);
+  const [computedPosition, setComputedPosition] = useState(position);
   const isInteractive = typeof visible === 'undefined';
+  const childrenRef = useRef<View>(null);
+  const popoverRef = useRef<View>(null);
 
   const handlers: { [prop: string]: () => void } = {};
 
@@ -75,21 +88,60 @@ export default ({
     }
   }
 
-  const handlePopoverLayout = useCallback((event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
-    setPopoverLayout({ width, height });
-  }, []);
+  const handlePopoverLayout = useCallback(() => {
+    popoverRef.current?.measureInWindow((x, y, width, height) => {
+      setPopoverLayout({ x, y, width, height });
+    });
+  }, [popoverRef]);
 
-  const handleChildrenLayout = useCallback((event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
-    setChildrenLayout({ width, height });
-  }, []);
+  const handleChildrenLayout = useCallback(() => {
+    childrenRef.current?.measureInWindow((x, y, width, height) => {
+      setChildrenLayout({ x, y, width, height });
+    });
+  }, [childrenRef]);
+
+  useEffect(
+    () => {
+      let nextPosition = position;
+
+      if (!strictPosition) {
+        switch (position) {
+          case 'left':
+            if (popoverLayout.x <= 0) {
+              nextPosition = 'right';
+            }
+            break;
+
+          case 'right':
+            if (popoverLayout.x + popoverLayout.width > dimensions.width) {
+              nextPosition = 'left';
+            }
+            break;
+
+          case 'top':
+            if (popoverLayout.y <= 0) {
+              nextPosition = 'bottom';
+            }
+            break;
+
+          case 'bottom':
+            if (popoverLayout.y + popoverLayout.height >= dimensions.height) {
+              nextPosition = 'top';
+            }
+            break;
+        }
+      }
+
+      setComputedPosition(nextPosition);
+    },
+    [position, strictPosition] // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   useEffect(() => {
     let left = 0;
     let top = 0;
 
-    switch (position) {
+    switch (computedPosition) {
       case 'right':
       case 'left':
         top = (popoverLayout.height - childrenLayout.height) / 2;
@@ -102,11 +154,12 @@ export default ({
     }
 
     setPopoverOffset({ left, top });
-  }, [childrenLayout, popoverLayout, position]);
+  }, [childrenLayout, popoverLayout, computedPosition]);
 
   return (
     <View style={styles.container}>
       <Popover
+        ref={popoverRef}
         animated={animated}
         animationType={animationType}
         backgroundColor={backgroundColor}
@@ -114,16 +167,16 @@ export default ({
         caretPosition={caretPosition}
         numberOfLines={numberOfLines}
         onLayout={handlePopoverLayout}
-        position={position}
+        position={computedPosition}
         visible={isInteractive ? popoverVisible : visible}
         style={[
-          position === 'top' && styles.popoverTop,
-          position === 'bottom' && styles.popoverBottom,
-          position === 'left' && {
+          computedPosition === 'top' && styles.popoverTop,
+          computedPosition === 'bottom' && styles.popoverBottom,
+          computedPosition === 'left' && {
             alignItems: 'flex-end',
             right: childrenLayout.width,
           },
-          position === 'right' && { left: childrenLayout.width },
+          computedPosition === 'right' && { left: childrenLayout.width },
           {
             position: 'absolute',
             marginLeft: popoverOffset.left * -1,
@@ -135,7 +188,11 @@ export default ({
         {content}
       </Popover>
 
-      <Pressable onLayout={handleChildrenLayout} {...handlers}>
+      <Pressable
+        ref={childrenRef}
+        onLayout={handleChildrenLayout}
+        {...handlers}
+      >
         {children}
       </Pressable>
     </View>
