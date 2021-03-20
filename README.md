@@ -134,7 +134,7 @@ Callback to monitor the popover visibility state. Called whenever `visible` chan
 
 #### strictPosition
 
-If the popover should be placed on the opposite side when it doesn't fit at the given position. If a popover is on the left of the screen and its position is left, the position will be turned to right by default. If `strictPosition` is `false`, the popover will remain on the left. **Defaults to `false`.**
+If the popover should be placed on the opposite side when it doesn't fit at the given position. If a popover is on the left of the screen and its position is left, the position will be turned to right by default. If `strictPosition` is `true`, the popover will remain on the left. **Defaults to `false`.**
 
 ```jsx
 <Popable strictPosition={true} position="left">
