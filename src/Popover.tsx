@@ -22,123 +22,119 @@ export type PopoverProps = {
   position?: 'top' | 'right' | 'bottom' | 'left';
 } & ViewProps;
 
-const Popover = React.forwardRef<View, PopoverProps>(
-  (
-    {
-      animated = true,
-      animationType = 'timing',
-      backgroundColor,
-      caret: withCaret = true,
-      caretPosition = 'center',
-      children,
-      numberOfLines,
-      visible = true,
-      position = 'bottom',
-      style,
-      ...extraProps
-    },
-    ref
-  ) => {
-    const isContentString = typeof children === 'string';
-    const isHorizontalLayout = position === 'left' || position === 'right';
-    const prevVisible = useRef(visible);
-    const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+const Popover = React.forwardRef<View, PopoverProps>(function Popover(
+  {
+    animated = true,
+    animationType = 'timing',
+    backgroundColor,
+    caret: withCaret = true,
+    caretPosition = 'center',
+    children,
+    numberOfLines,
+    visible = true,
+    position = 'bottom',
+    style,
+    ...extraProps
+  },
+  ref
+) {
+  const isContentString = typeof children === 'string';
+  const isHorizontalLayout = position === 'left' || position === 'right';
+  const prevVisible = useRef(visible);
+  const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
 
-    useEffect(
-      () => {
-        let animation: Animated.CompositeAnimation | undefined;
+  useEffect(
+    () => {
+      let animation: Animated.CompositeAnimation | undefined;
 
-        if (animated) {
-          if (visible && !prevVisible.current) {
-            animation = Animated[animationType](opacity, {
-              toValue: 1,
-              duration: 250,
-              useNativeDriver: true,
-            });
-          } else if (!visible && prevVisible.current) {
-            animation = Animated[animationType](opacity, {
-              toValue: 0,
-              duration: 250,
-              useNativeDriver: true,
-            });
-          }
-
-          animation?.start();
+      if (animated) {
+        if (visible && !prevVisible.current) {
+          animation = Animated[animationType](opacity, {
+            toValue: 1,
+            duration: 250,
+            useNativeDriver: true,
+          });
+        } else if (!visible && prevVisible.current) {
+          animation = Animated[animationType](opacity, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true,
+          });
         }
 
-        prevVisible.current = visible;
+        animation?.start();
+      }
 
-        return () => animation?.stop();
-      },
-      [visible] // eslint-disable-line react-hooks/exhaustive-deps
-    );
+      prevVisible.current = visible;
 
-    const caret = (
-      <Caret
-        align={caretPosition}
-        position={position}
-        backgroundColor={backgroundColor}
-        style={{ zIndex: 0 }}
-      />
-    );
+      return () => animation?.stop();
+    },
+    [visible] // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
-    let animationTranslation: any;
+  const caret = (
+    <Caret
+      align={caretPosition}
+      position={position}
+      backgroundColor={backgroundColor}
+      style={{ zIndex: 0 }}
+    />
+  );
 
-    if (isHorizontalLayout) {
-      animationTranslation = {
-        translateX: opacity.interpolate({
-          inputRange: [0, 1],
-          outputRange: position === 'left' ? [5, 0] : [-5, 0],
-        }),
-      };
-    } else {
-      animationTranslation = {
-        translateY: opacity.interpolate({
-          inputRange: [0, 1],
-          outputRange: position === 'top' ? [5, 0] : [-5, 0],
-        }),
-      };
-    }
+  let animationTranslation: any;
 
-    return (
-      <View
-        ref={ref}
-        style={[styles.container, style]}
-        pointerEvents={visible ? 'auto' : 'none'}
-        {...extraProps}
+  if (isHorizontalLayout) {
+    animationTranslation = {
+      translateX: opacity.interpolate({
+        inputRange: [0, 1],
+        outputRange: position === 'left' ? [5, 0] : [-5, 0],
+      }),
+    };
+  } else {
+    animationTranslation = {
+      translateY: opacity.interpolate({
+        inputRange: [0, 1],
+        outputRange: position === 'top' ? [5, 0] : [-5, 0],
+      }),
+    };
+  }
+
+  return (
+    <View
+      ref={ref}
+      style={[styles.container, style]}
+      pointerEvents={visible ? 'auto' : 'none'}
+      {...extraProps}
+    >
+      <Animated.View
+        style={[
+          { opacity, transform: [animationTranslation] },
+          isHorizontalLayout && styles.containerHorizontal,
+        ]}
       >
-        <Animated.View
+        {withCaret && (position === 'bottom' || position === 'right') && caret}
+
+        <View
           style={[
-            { opacity, transform: [animationTranslation] },
-            isHorizontalLayout && styles.containerHorizontal,
+            styles.content,
+            isContentString && styles.contentTextOnly,
+            !!backgroundColor && { backgroundColor },
           ]}
         >
-          {withCaret &&
-            (position === 'bottom' || position === 'right') &&
-            caret}
+          {isContentString ? (
+            <Text numberOfLines={numberOfLines} style={styles.contentText}>
+              {children}
+            </Text>
+          ) : (
+            children
+          )}
+        </View>
 
-          <View
-            style={[
-              styles.content,
-              isContentString && styles.contentTextOnly,
-              !!backgroundColor && { backgroundColor },
-            ]}
-          >
-            {isContentString ? (
-              <Text numberOfLines={numberOfLines} style={styles.contentText}>
-                {children}
-              </Text>
-            ) : (
-              children
-            )}
-          </View>
-
-          {withCaret && (position === 'top' || position === 'left') && caret}
-        </Animated.View>
-      </View>
-    );
-  }
-);
+        {withCaret && (position === 'top' || position === 'left') && caret}
+      </Animated.View>
+    </View>
+  );
+});
 
 const styles = StyleSheet.create({
   container: {
