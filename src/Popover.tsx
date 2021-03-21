@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   content: {
+    flex: 1,
     zIndex: 1,
     backgroundColor: POPOVER_BACKGROUND_COLOR,
     borderRadius: BORDER_RADIUS * 2,
