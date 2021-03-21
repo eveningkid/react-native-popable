@@ -26,6 +26,8 @@ Popovers, tooltips for React Native.
 npm install react-native-popable
 ```
 
+> **If working with React Native Web, you'll need at least version 0.15.0.** It introduced hover events for Pressable which is used internally.
+
 ### Popable
 
 Add a popover around a given component. Uses [`Popover`](#Popover) internally.
