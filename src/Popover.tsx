@@ -78,7 +78,7 @@ export default React.forwardRef<View, PopoverProps>(
         align={caretPosition}
         position={position}
         backgroundColor={backgroundColor}
-        style={{ zIndex: 0 }}
+        style={styles.caret}
       />
     );
 
@@ -163,5 +163,8 @@ const styles = StyleSheet.create({
     fontSize: POPOVER_FONT_SIZE,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  caret: {
+    zIndex: 0,
   },
 });
