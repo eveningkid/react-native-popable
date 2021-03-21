@@ -100,42 +100,39 @@ export default ({
     });
   }, [childrenRef]);
 
-  useEffect(
-    () => {
-      let nextPosition = position;
+  useEffect(() => {
+    let nextPosition = position;
 
-      if (!strictPosition) {
-        switch (position) {
-          case 'left':
-            if (popoverLayout.x <= 0) {
-              nextPosition = 'right';
-            }
-            break;
+    if (!strictPosition) {
+      switch (position) {
+        case 'left':
+          if (popoverLayout.x <= 0) {
+            nextPosition = 'right';
+          }
+          break;
 
-          case 'right':
-            if (popoverLayout.x + popoverLayout.width > dimensions.width) {
-              nextPosition = 'left';
-            }
-            break;
+        case 'right':
+          if (popoverLayout.x + popoverLayout.width > dimensions.width) {
+            nextPosition = 'left';
+          }
+          break;
 
-          case 'top':
-            if (popoverLayout.y <= 0) {
-              nextPosition = 'bottom';
-            }
-            break;
+        case 'top':
+          if (popoverLayout.y <= 0) {
+            nextPosition = 'bottom';
+          }
+          break;
 
-          case 'bottom':
-            if (popoverLayout.y + popoverLayout.height >= dimensions.height) {
-              nextPosition = 'top';
-            }
-            break;
-        }
+        case 'bottom':
+          if (popoverLayout.y + popoverLayout.height >= dimensions.height) {
+            nextPosition = 'top';
+          }
+          break;
       }
+    }
 
-      setComputedPosition(nextPosition);
-    },
-    [position, strictPosition] // eslint-disable-line react-hooks/exhaustive-deps
-  );
+    setComputedPosition(nextPosition);
+  }, [position, strictPosition, popoverLayout, childrenLayout, dimensions]);
 
   useEffect(() => {
     let left = 0;
@@ -154,7 +151,7 @@ export default ({
     }
 
     setPopoverOffset({ left, top });
-  }, [childrenLayout, popoverLayout, computedPosition]);
+  }, [computedPosition, popoverLayout, childrenLayout]);
 
   return (
     <View style={styles.container}>
@@ -179,8 +176,10 @@ export default ({
           computedPosition === 'right' && { left: childrenLayout.width },
           {
             position: 'absolute',
-            marginLeft: popoverOffset.left * -1,
-            marginTop: popoverOffset.top * -1,
+            transform: [
+              { translateX: popoverOffset.left * -1 },
+              { translateY: popoverOffset.top * -1 },
+            ],
           },
           style,
         ]}
