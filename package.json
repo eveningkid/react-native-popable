@@ -1,6 +1,6 @@
 {
   "name": "react-native-popable",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Popovers, tooltips for React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
