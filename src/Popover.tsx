@@ -77,7 +77,7 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
       align={caretPosition}
       position={position}
       backgroundColor={backgroundColor}
-      style={{ zIndex: 0 }}
+      style={styles.caret}
     />
   );
 
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   content: {
+    flex: 1,
     zIndex: 1,
     backgroundColor: POPOVER_BACKGROUND_COLOR,
     borderRadius: BORDER_RADIUS * 2,
@@ -158,6 +159,9 @@ const styles = StyleSheet.create({
     fontSize: POPOVER_FONT_SIZE,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  caret: {
+    zIndex: 0,
   },
 });
 

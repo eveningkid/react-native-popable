@@ -26,6 +26,8 @@ Popovers, tooltips for React Native.
 npm install react-native-popable
 ```
 
+> **If working with React Native Web, you'll need at least version 0.15.0.** It introduced hover events for Pressable which is used internally.
+
 ### Popable
 
 Add a popover around a given component. Uses [`Popover`](#Popover) internally.
@@ -134,10 +136,10 @@ Callback to monitor the popover visibility state. Called whenever `visible` chan
 
 #### strictPosition
 
-If the popover should be placed on the opposite side when it doesn't fit at the given position. If a popover is on the left of the screen and its position is left, the position will be turned to right by default. If `strictPosition` is `false`, the popover will remain on the left. **Defaults to `true`.**
+If the popover should be placed on the opposite side when it doesn't fit at the given position. If a popover is on the left of the screen and its position is left, the position will be turned to right by default. If `strictPosition` is `true`, the popover will remain on the left. **Defaults to `false`.**
 
 ```jsx
-<Popable strictPosition={false} position="left">
+<Popable strictPosition={true} position="left">
   @morning_cafe
 </Popable>
 ```
