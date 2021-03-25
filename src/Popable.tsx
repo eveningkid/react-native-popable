@@ -17,6 +17,7 @@ export type PropableProps = {
   caretPosition?: PopoverProps['caretPosition'];
   children: any;
   content: PopoverProps['children'];
+  hidesOnOutsidePress?: boolean;
   numberOfLines?: PopoverProps['numberOfLines'];
   onAction?: (visible: boolean) => void;
   position?: PopoverProps['position'];
@@ -41,6 +42,7 @@ const Popable = ({
   caret,
   caretPosition,
   content,
+  hidesOnOutsidePress = true,
   numberOfLines,
   onAction,
   position = 'top',
@@ -152,6 +154,37 @@ const Popable = ({
 
     setPopoverOffset({ left, top });
   }, [computedPosition, popoverLayout, childrenLayout]);
+
+  useEffect(() => {
+    if (!hidesOnOutsidePress) {
+      return;
+    }
+
+    const handler = (event: any) => {
+      if (
+        // @ts-ignore
+        !popoverRef.current.contains(event.target) &&
+        // @ts-ignore
+        !childrenRef.current.contains(event.target) &&
+        isInteractive &&
+        popoverVisible
+      ) {
+        setPopoverVisible(false);
+      }
+    };
+
+    // @ts-ignore
+    document.addEventListener('mousedown', handler);
+
+    // @ts-ignore
+    return () => document.removeEventListener('mousedown', handler);
+  }, [
+    hidesOnOutsidePress,
+    isInteractive,
+    popoverVisible,
+    popoverRef,
+    childrenRef,
+  ]);
 
   return (
     <View style={styles.container}>
