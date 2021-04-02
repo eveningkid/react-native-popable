@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Platform,
   // @ts-ignore
   Pressable,
   StyleSheet,
@@ -64,7 +65,7 @@ const Popable = ({
   const handlers: { [prop: string]: () => void } = {};
 
   if (isInteractive) {
-    if (action === 'hover') {
+    if (action === 'hover' && Platform.OS === 'web') {
       handlers.onHoverIn = () => {
         setPopoverVisible(true);
         onAction?.(true);
@@ -74,7 +75,10 @@ const Popable = ({
         setPopoverVisible(false);
         onAction?.(false);
       };
-    } else if (action === 'press') {
+    } else if (
+      action === 'press' ||
+      (action === 'hover' && Platform.OS !== 'web')
+    ) {
       handlers.onPress = () => {
         setPopoverVisible((visible) => {
           onAction?.(!visible);
