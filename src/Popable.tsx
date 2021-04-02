@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Platform,
   // @ts-ignore
   Pressable,
   StyleSheet,
@@ -7,6 +8,7 @@ import {
   View,
   ViewProps,
 } from 'react-native';
+import Backdrop from './Backdrop';
 import Popover, { PopoverProps } from './Popover';
 
 export type PropableProps = {
@@ -18,6 +20,7 @@ export type PropableProps = {
   caretPosition?: PopoverProps['caretPosition'];
   children: any;
   content: PopoverProps['children'];
+  hidesOnOutsidePress?: boolean;
   numberOfLines?: PopoverProps['numberOfLines'];
   onAction?: (visible: boolean) => void;
   position?: PopoverProps['position'];
@@ -43,6 +46,7 @@ const Popable = ({
   caret,
   caretPosition,
   content,
+  hidesOnOutsidePress = true,
   numberOfLines,
   onAction,
   position = 'top',
@@ -64,7 +68,7 @@ const Popable = ({
   const handlers: { [prop: string]: () => void } = {};
 
   if (isInteractive) {
-    if (action === 'hover') {
+    if (action === 'hover' && Platform.OS === 'web') {
       handlers.onHoverIn = () => {
         setPopoverVisible(true);
         onAction?.(true);
@@ -74,7 +78,10 @@ const Popable = ({
         setPopoverVisible(false);
         onAction?.(false);
       };
-    } else if (action === 'press') {
+    } else if (
+      action === 'press' ||
+      (action === 'hover' && Platform.OS !== 'web')
+    ) {
       handlers.onPress = () => {
         setPopoverVisible((visible) => {
           onAction?.(!visible);
@@ -90,6 +97,10 @@ const Popable = ({
       };
     }
   }
+
+  const handleHidePopover = useCallback(() => {
+    setPopoverVisible(false);
+  }, []);
 
   const handlePopoverLayout = useCallback(() => {
     popoverRef.current?.measureInWindow((x, y, width, height) => {
@@ -158,6 +169,14 @@ const Popable = ({
 
   return (
     <View style={[styles.container, wrapperStyle]}>
+      <Backdrop
+        enabled={hidesOnOutsidePress}
+        visible={isInteractive && popoverVisible}
+        onPress={handleHidePopover}
+        popoverRef={popoverRef}
+        childrenRef={childrenRef}
+      />
+
       <Popover
         ref={popoverRef}
         animated={animated}
