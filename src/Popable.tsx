@@ -6,6 +6,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   View,
+  ViewProps,
 } from 'react-native';
 import Backdrop from './Backdrop';
 import Popover, { PopoverProps } from './Popover';
@@ -26,6 +27,7 @@ export type PropableProps = {
   strictPosition?: boolean;
   style?: PopoverProps['style'];
   visible?: boolean;
+  wrapperStyle?: ViewProps['style'];
 };
 
 const DEFAULT_LAYOUT = {
@@ -51,6 +53,7 @@ const Popable = ({
   strictPosition = false,
   style,
   visible,
+  wrapperStyle,
 }: PropableProps) => {
   const dimensions = useWindowDimensions();
   const [popoverVisible, setPopoverVisible] = useState(false);
@@ -165,7 +168,7 @@ const Popable = ({
   }, [computedPosition, popoverLayout, childrenLayout]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, wrapperStyle]}>
       <Backdrop
         enabled={hidesOnOutsidePress}
         visible={isInteractive && popoverVisible}
