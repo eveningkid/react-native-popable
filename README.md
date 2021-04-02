@@ -60,6 +60,7 @@ export default () => (
   - [strictPosition](#strictPosition)
   - [style](#style)
   - [visible (from Popover)](#visible)
+  - [wrapperStyle](#wrapperStyle)
 
 #### Popable.children
 
@@ -150,6 +151,14 @@ Style the `Popover` component using any [`View` style property](https://reactnat
 
 ```jsx
 <Popable style={{ opacity: 0.8 }}>@morning_cafe</Popable>
+```
+
+#### wrapperStyle
+
+Style the wrapping `View` component using any [`View` style property](https://reactnative.dev/docs/view-style-props).
+
+```jsx
+<Popable wrapperStyle={{ flex: 1, display: "flex" }}>@morning_cafe</Popable>
 ```
 
 ### Popover
