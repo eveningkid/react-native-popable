@@ -158,7 +158,7 @@ Style the `Popover` component using any [`View` style property](https://reactnat
 Style the wrapping `View` component using any [`View` style property](https://reactnative.dev/docs/view-style-props).
 
 ```jsx
-<Popable wrapperStyle={{ flex: 1, display: "flex" }}>@morning_cafe</Popable>
+<Popable wrapperStyle={{ flex: 1, display: 'flex' }}>@morning_cafe</Popable>
 ```
 
 ### Popover
@@ -179,6 +179,7 @@ export default () => <Popover>@morning_cafe</Popover>;
   - [backgroundColor](#backgroundColor)
   - [caret](#caret)
   - [caretPosition](#caretPosition)
+  - [forceInitialAnimation](#forceInitialAnimation)
   - [numberOfLines](#numberOfLines)
   - [visible](#visible)
   - [position](#position)
@@ -236,6 +237,14 @@ Position for the caret: `left`, `center` or `right`. **Defaults to `center`.**
 
 ```jsx
 <Popover caretPosition="right">@morning_cafe</Popover>
+```
+
+#### forceInitialAnimation
+
+If the popover should animate when it renders for the first time. This means that if `visible` is set to `true`, the popover will fade in after it mounted. Likewise, if `visible` is `false`, the popover will fade out. If this property is kept falsy, the popover will be displayed in its initial visibility state, without animating. It is very unlikely you would ever need this property. **Defaults to `false`.**
+
+```jsx
+<Popover forceInitialAnimation>@morning_cafe</Popover>
 ```
 
 #### numberOfLines

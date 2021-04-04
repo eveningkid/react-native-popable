@@ -3,16 +3,11 @@ import type { BackdropProps } from './Backdrop.d';
 
 export default function Backdrop({
   childrenRef,
-  enabled,
   onPress,
   popoverRef,
   visible,
 }: BackdropProps) {
   useEffect(() => {
-    if (!enabled) {
-      return;
-    }
-
     const handler = (event: any) => {
       if (
         // @ts-ignore
@@ -30,7 +25,7 @@ export default function Backdrop({
 
     // @ts-ignore
     return () => document.removeEventListener('mousedown', handler);
-  }, [enabled, visible, onPress, popoverRef, childrenRef]);
+  }, [visible, onPress, popoverRef, childrenRef]);
 
   return null;
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View, ViewProps } from 'react-native';
 import Caret from './Caret';
+import { ANIMATION_DURATION } from './constants';
 import {
   POPOVER_BACKGROUND_COLOR,
   BORDER_RADIUS,
@@ -17,6 +18,7 @@ export type PopoverProps = {
   caret?: boolean;
   caretPosition?: 'left' | 'center' | 'right';
   children: string | React.ReactElement;
+  forceInitialAnimation?: boolean;
   numberOfLines?: number;
   visible?: boolean;
   position?: 'top' | 'right' | 'bottom' | 'left';
@@ -30,6 +32,7 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
     caret: withCaret = true,
     caretPosition = 'center',
     children,
+    forceInitialAnimation = false,
     numberOfLines,
     visible = true,
     position = 'bottom',
@@ -41,23 +44,27 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
   const isContentString = typeof children === 'string';
   const isHorizontalLayout = position === 'left' || position === 'right';
   const prevVisible = useRef(visible);
-  const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  const opacity = useRef(
+    new Animated.Value(
+      visible ? (forceInitialAnimation ? 0 : 1) : forceInitialAnimation ? 1 : 0
+    )
+  ).current;
 
   useEffect(
     () => {
       let animation: Animated.CompositeAnimation | undefined;
 
       if (animated) {
-        if (visible && !prevVisible.current) {
+        if (visible && (!prevVisible.current || forceInitialAnimation)) {
           animation = Animated[animationType](opacity, {
             toValue: 1,
-            duration: 250,
+            duration: ANIMATION_DURATION,
             useNativeDriver: true,
           });
-        } else if (!visible && prevVisible.current) {
+        } else if (!visible && (prevVisible.current || forceInitialAnimation)) {
           animation = Animated[animationType](opacity, {
             toValue: 0,
-            duration: 250,
+            duration: ANIMATION_DURATION,
             useNativeDriver: true,
           });
         }

@@ -1,10 +1,10 @@
-import type { RefObject } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import type { View } from 'react-native';
 
 export type BackdropProps = {
-  enabled: boolean;
-  visible: boolean;
+  children?: ReactNode;
+  childrenRef: RefObject<View>;
   onPress: () => void;
   popoverRef: RefObject<View>;
-  childrenRef: RefObject<View>;
+  visible: boolean;
 };
