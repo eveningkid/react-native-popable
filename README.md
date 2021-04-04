@@ -223,7 +223,7 @@ Background color for the popover and the caret.
 <Popover backgroundColor="red">@morning_cafe</Popover>
 ```
 
-### caret
+#### caret
 
 If the little caret (the "half-triangle") should be displayed. **Defaults to `true`.**
 
