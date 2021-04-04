@@ -14,6 +14,8 @@ Popovers, tooltips for React Native.
 
 🎒 Built with Typescript
 
+👩‍🔬 Try the [API sandbox](https://snack.expo.io/dmLOIiVHy)
+
 ```jsx
 <Popable content="See profile">
   <Text>@eveningkid</Text>
