@@ -20,7 +20,6 @@ export type PropableProps = {
   caretPosition?: PopoverProps['caretPosition'];
   children: any;
   content: PopoverProps['children'];
-  hidesOnOutsidePress?: boolean;
   numberOfLines?: PopoverProps['numberOfLines'];
   onAction?: (visible: boolean) => void;
   position?: PopoverProps['position'];
@@ -46,7 +45,6 @@ const Popable = ({
   caret,
   caretPosition,
   content,
-  hidesOnOutsidePress = true,
   numberOfLines,
   onAction,
   position = 'top',
@@ -59,9 +57,14 @@ const Popable = ({
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [popoverOffset, setPopoverOffset] = useState({ left: 0, top: 0 });
   const [popoverLayout, setPopoverLayout] = useState(DEFAULT_LAYOUT);
+  const [popoverPagePosition, setPopoverPagePosition] = useState({
+    left: 0,
+    top: 0,
+  });
   const [childrenLayout, setChildrenLayout] = useState(DEFAULT_LAYOUT);
   const [computedPosition, setComputedPosition] = useState(position);
   const isInteractive = typeof visible === 'undefined';
+  const isPopoverVisible = isInteractive ? popoverVisible : visible;
   const childrenRef = useRef<View>(null);
   const popoverRef = useRef<View>(null);
 
@@ -83,17 +86,21 @@ const Popable = ({
       (action === 'hover' && Platform.OS !== 'web')
     ) {
       handlers.onPress = () => {
-        setPopoverVisible((visible) => {
-          onAction?.(!visible);
-          return !visible;
-        });
+        if (!visible) {
+          popoverRef.current?.measure(
+            (_x, _y, _width, _height, pageX, pageY) => {
+              setPopoverPagePosition({ left: pageX, top: pageY });
+            }
+          );
+        }
+
+        onAction?.(!visible);
+        setPopoverVisible(!visible);
       };
     } else {
       handlers.onLongPress = () => {
-        setPopoverVisible((visible) => {
-          onAction?.(!visible);
-          return !visible;
-        });
+        onAction?.(!visible);
+        setPopoverVisible(!visible);
       };
     }
   }
@@ -167,27 +174,59 @@ const Popable = ({
     setPopoverOffset({ left, top });
   }, [computedPosition, popoverLayout, childrenLayout]);
 
+  const sharedPopoverProps = {
+    animated,
+    animationType,
+    backgroundColor,
+    caret,
+    caretPosition,
+    children: content,
+    numberOfLines,
+    position: computedPosition,
+  };
+
   return (
     <View style={[styles.container, wrapperStyle]}>
       <Backdrop
-        enabled={hidesOnOutsidePress}
         visible={isInteractive && popoverVisible}
         onPress={handleHidePopover}
         popoverRef={popoverRef}
         childrenRef={childrenRef}
-      />
+      >
+        {
+          // Backdrop renders the same popover because:
+          // since the backdrop adds a layer on top of the screen to
+          // detect any "outside popover press", the inner popover becomes
+          // unreachable: the upper layer would keep all the touch events.
+          // Because the backdrop uses a modal as a layer, we render that
+          // same popover inside the modal, and hide the initial one
+          // underneath (which explains why the popover below this one has
+          // `visible` set to `false`)
+          Platform.OS !== 'web' && (
+            <Popover
+              {...sharedPopoverProps}
+              forceInitialAnimation
+              visible={isPopoverVisible}
+              style={[
+                {
+                  position: 'absolute',
+                  transform: [
+                    { translateX: popoverPagePosition.left },
+                    { translateY: popoverPagePosition.top },
+                  ],
+                },
+                style,
+              ]}
+            />
+          )
+        }
+      </Backdrop>
 
       <Popover
         ref={popoverRef}
-        animated={animated}
-        animationType={animationType}
-        backgroundColor={backgroundColor}
-        caret={caret}
-        caretPosition={caretPosition}
-        numberOfLines={numberOfLines}
+        {...sharedPopoverProps}
         onLayout={handlePopoverLayout}
-        position={computedPosition}
-        visible={isInteractive ? popoverVisible : visible}
+        visible={Platform.OS === 'web' ? isPopoverVisible : false}
         style={[
           computedPosition === 'top' && styles.popoverTop,
           computedPosition === 'bottom' && styles.popoverBottom,
@@ -205,9 +244,7 @@ const Popable = ({
           },
           style,
         ]}
-      >
-        {content}
-      </Popover>
+      />
 
       <Pressable
         ref={childrenRef}
