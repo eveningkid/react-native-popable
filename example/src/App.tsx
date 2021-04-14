@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { Popable } from 'react-native-popable';
+import { Popable, usePopable } from 'react-native-popable';
 
 export default function App() {
+  const [ref, { hide }] = usePopable();
+
   return (
     <View style={styles.container}>
-      <Popable content="See profile">
-        <Text>@eveningkid</Text>
+      <Popable ref={ref} content="See profile">
+        <Text onPress={hide}>@eveningkid</Text>
       </Popable>
     </View>
   );
