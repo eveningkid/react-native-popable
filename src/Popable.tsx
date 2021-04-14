@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import {
   Platform,
   // @ts-ignore
@@ -10,8 +17,9 @@ import {
 } from 'react-native';
 import Backdrop from './Backdrop';
 import Popover, { PopoverProps } from './Popover';
+import type { PopableManager } from './use-popable/types';
 
-export type PropableProps = {
+export type PopableProps = {
   action?: 'press' | 'longpress' | 'hover';
   animated?: PopoverProps['animated'];
   animationType?: PopoverProps['animationType'];
@@ -36,23 +44,26 @@ const DEFAULT_LAYOUT = {
   y: 0,
 };
 
-const Popable = ({
-  action = 'press',
-  animated,
-  animationType,
-  backgroundColor,
-  children,
-  caret,
-  caretPosition,
-  content,
-  numberOfLines,
-  onAction,
-  position = 'top',
-  strictPosition = false,
-  style,
-  visible,
-  wrapperStyle,
-}: PropableProps) => {
+const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
+  {
+    action = 'press',
+    animated,
+    animationType,
+    backgroundColor,
+    children,
+    caret,
+    caretPosition,
+    content,
+    numberOfLines,
+    onAction,
+    position = 'top',
+    strictPosition = false,
+    style,
+    visible,
+    wrapperStyle,
+  },
+  ref
+) {
   const dimensions = useWindowDimensions();
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [popoverOffset, setPopoverOffset] = useState({ left: 0, top: 0 });
@@ -67,6 +78,11 @@ const Popable = ({
   const isPopoverVisible = isInteractive ? popoverVisible : visible;
   const childrenRef = useRef<View>(null);
   const popoverRef = useRef<View>(null);
+
+  useImperativeHandle(ref, () => ({
+    show: () => setPopoverVisible(true),
+    hide: () => setPopoverVisible(false),
+  }));
 
   const handlers: { [prop: string]: () => void } = {};
 
@@ -255,7 +271,7 @@ const Popable = ({
       </Pressable>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
