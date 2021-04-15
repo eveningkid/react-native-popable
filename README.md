@@ -290,6 +290,80 @@ Every usual [`View` property](https://reactnative.dev/docs/view#props) is availa
 <Popover onLayout={...}>@morning_cafe</Popover>
 ```
 
+### usePopable
+
+If you need to imperatively control the `Popable` component, you can use the `usePopable` hook. It lets you `show` and `hide` the Popable without needing to manage state yourself.
+
+You typically won't need to use this hook, since `react-native-popable` intelligently hides popovers when users press or hover away. However, it comes in handy for features like menus.
+
+#### Usage
+
+```jsx
+const [ref, { hide, show }] = usePopable();
+
+return <Popable ref={ref} />
+```
+
+If you prefer to not use the array syntax, you can destructure like so:
+
+```jsx
+const { ref, hide, show } = usePopable();
+
+return <Popable ref={ref} />
+```
+
+#### Hide the Popable
+
+If you're building a Popable menu, you'll want to `hide` the Popable when someone clicks a menu item.
+
+```jsx
+import React from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { Popable, usePopable } from 'react-native-popable';
+
+import Menu from './menu';
+
+export default function App() {
+  const [ref, { hide }] = usePopable();
+
+  return (
+    <View style={styles.container}>
+      <Popable ref={ref} content={<Menu onPressMenuItem={() => hide()} />}>
+        <Text>Open Menu</Text>
+      </Popable>
+    </View>
+  );
+}
+```
+
+#### Show the Popable
+
+Similar to the example above, you can `show` the Popable imperatively:
+
+```jsx
+import React from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { Popable, usePopable } from 'react-native-popable';
+
+import Menu from './menu';
+
+export default function App() {
+  const [ref, { show, hide }] = usePopable();
+
+  return (
+    <View style={styles.container}>
+      <Button title="Open Menu" onPress={() => show()} />
+
+      <Popable ref={ref} content={<Menu onPressMenuItem={() => hide()} />}>
+        <Text>Menu</Text>
+      </Popable>
+    </View>
+  );
+}
+```
+
+This is a rare use-case, since you'll typically use the children as the trigger of your Popable.
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
