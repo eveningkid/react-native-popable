@@ -299,8 +299,6 @@ You typically won't need to use this hook, since `react-native-popable` intellig
 #### Usage
 
 ```jsx
-i
-
 const [ref, { hide, show }] = usePopable();
 
 return <Popable ref={ref} />
