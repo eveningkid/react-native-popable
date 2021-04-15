@@ -17,7 +17,7 @@ type UsePopable = UsePopableObject & UsePopableArray;
  * ```jsx
  * const [ref, { show, hide }] = usePopable()
  *
- * return <Popable />
+ * return <Popable ref={ref} />
  * ```
  *
  * If you prefer, you can destructure as an object:
