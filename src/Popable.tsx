@@ -123,7 +123,8 @@ const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
 
   const handleHidePopover = useCallback(() => {
     setPopoverVisible(false);
-  }, []);
+    onAction?.(false);
+  }, [onAction]);
 
   const handlePopoverLayout = useCallback(() => {
     popoverRef.current?.measureInWindow((x, y, width, height) => {
