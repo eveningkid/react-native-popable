@@ -1,5 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View, ViewProps } from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TextProps,
+  View,
+  ViewProps,
+} from 'react-native';
 import Caret from './Caret';
 import { ANIMATION_DURATION } from './constants';
 import {
@@ -17,6 +24,9 @@ export type PopoverProps = {
   backgroundColor?: string;
   caret?: boolean;
   caretPosition?: 'left' | 'center' | 'right';
+  caretStyle?: ViewProps['style'];
+  contentStyle?: ViewProps['style'];
+  contentTextStyle?: TextProps['style'];
   children: string | React.ReactElement;
   forceInitialAnimation?: boolean;
   numberOfLines?: number;
@@ -31,7 +41,10 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
     backgroundColor,
     caret: withCaret = true,
     caretPosition = 'center',
+    caretStyle,
     children,
+    contentStyle,
+    contentTextStyle,
     forceInitialAnimation = false,
     numberOfLines,
     visible = true,
@@ -84,7 +97,7 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
       align={caretPosition}
       position={position}
       backgroundColor={backgroundColor}
-      style={styles.caret}
+      style={[styles.caret, caretStyle]}
     />
   );
 
@@ -126,10 +139,14 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
             styles.content,
             isContentString && styles.contentTextOnly,
             !!backgroundColor && { backgroundColor },
+            contentStyle,
           ]}
         >
           {isContentString ? (
-            <Text numberOfLines={numberOfLines} style={styles.contentText}>
+            <Text
+              numberOfLines={numberOfLines}
+              style={[styles.contentText, contentTextStyle]}
+            >
               {children}
             </Text>
           ) : (

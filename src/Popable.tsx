@@ -26,12 +26,15 @@ export type PopableProps = {
   backgroundColor?: PopoverProps['backgroundColor'];
   caret?: PopoverProps['caret'];
   caretPosition?: PopoverProps['caretPosition'];
+  caretStyle?: PopoverProps['caretStyle'];
   children: any;
   content: PopoverProps['children'];
   numberOfLines?: PopoverProps['numberOfLines'];
   onAction?: (visible: boolean) => void;
   position?: PopoverProps['position'];
   strictPosition?: boolean;
+  contentStyle?: PopoverProps['contentStyle'];
+  contentTextStyle?: PopoverProps['contentTextStyle'];
   style?: PopoverProps['style'];
   visible?: boolean;
   wrapperStyle?: ViewProps['style'];
@@ -53,7 +56,10 @@ const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
     children,
     caret,
     caretPosition,
+    caretStyle,
     content,
+    contentStyle,
+    contentTextStyle,
     numberOfLines,
     onAction,
     position = 'top',
@@ -197,7 +203,10 @@ const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
     backgroundColor,
     caret,
     caretPosition,
+    caretStyle,
     children: content,
+    contentStyle,
+    contentTextStyle,
     numberOfLines,
     position: computedPosition,
   };
