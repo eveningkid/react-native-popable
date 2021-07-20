@@ -155,6 +155,30 @@ Style the `Popover` component using any [`View` style property](https://reactnat
 <Popable style={{ opacity: 0.8 }}>@morning_cafe</Popable>
 ```
 
+#### contentStyle
+
+Style the content component inside the `Popover` component using any [`View` style property](https://reactnative.dev/docs/view-style-props).
+
+```jsx
+<Popable contentStyle={{ padding: 10 }}>@morning_cafe</Popable>
+```
+
+#### contentTextStyle
+
+Style the text inside the `Popover` component using any [`Text` style property](https://reactnative.dev/docs/text-style-props).
+
+```jsx
+<Popable contentTextStyle={{ color: 'black' }}>@morning_cafe</Popable>
+```
+
+#### caretStyle
+
+Style the caret component inside the `Popover` component using any [`View` style property](https://reactnative.dev/docs/view-style-props).
+
+```jsx
+<Popable caretStyle={{ height: 10 }}>@morning_cafe</Popable>
+```
+
 #### wrapperStyle
 
 Style the wrapping `View` component using any [`View` style property](https://reactnative.dev/docs/view-style-props).
