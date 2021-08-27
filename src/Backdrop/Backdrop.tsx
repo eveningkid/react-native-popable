@@ -8,6 +8,15 @@ import {
 import { ANIMATION_DURATION } from '../constants';
 import type { BackdropProps } from './Backdrop.d';
 
+// On iOS, Modal orientations need to be manually specified
+const IOS_MODAL_SUPPORTED_ORIENTATIONS = [
+  'portrait',
+  'portrait-upside-down',
+  'landscape',
+  'landscape-left',
+  'landscape-right',
+];
+
 export default function Backdrop({
   children,
   onPress,
@@ -34,6 +43,7 @@ export default function Backdrop({
       onRequestClose={onPress}
       hardwareAccelerated
       transparent
+      supportedOrientations={IOS_MODAL_SUPPORTED_ORIENTATIONS}
     >
       <Pressable onPress={onPress} style={styles.pressable}>
         {children}
