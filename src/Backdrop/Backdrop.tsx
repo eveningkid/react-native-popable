@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Modal,
+  ModalProps,
   //@ts-ignore
   Pressable,
   StyleSheet,
@@ -9,7 +10,7 @@ import { ANIMATION_DURATION } from '../constants';
 import type { BackdropProps } from './Backdrop.d';
 
 // On iOS, Modal orientations need to be manually specified
-const IOS_MODAL_SUPPORTED_ORIENTATIONS = [
+const IOS_MODAL_SUPPORTED_ORIENTATIONS: ModalProps['supportedOrientations'] = [
   'portrait',
   'portrait-upside-down',
   'landscape',
