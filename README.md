@@ -63,6 +63,7 @@ export default () => (
   - [style](#style)
   - [visible (from Popover)](#visible)
   - [wrapperStyle](#wrapperStyle)
+  - [caretStyle](#caretStyle)
 
 #### Popable.children
 
@@ -162,6 +163,15 @@ Style the wrapping `View` component using any [`View` style property](https://re
 ```jsx
 <Popable wrapperStyle={{ flex: 1, display: 'flex' }}>@morning_cafe</Popable>
 ```
+
+#### caretStyle
+
+Style the caret component using any [`View` style property](https://reactnative.dev/docs/view-style-props).
+
+```jsx
+<Popable caretStyle={{ backgroundColor: "blue" }}>@morning_cafe</Popable>
+```
+
 
 ### Popover
 
