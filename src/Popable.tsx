@@ -35,6 +35,7 @@ export type PopableProps = {
   style?: PopoverProps['style'];
   visible?: boolean;
   wrapperStyle?: ViewProps['style'];
+  caretStyle?: ViewProps['style'];
 };
 
 const DEFAULT_LAYOUT = {
@@ -61,6 +62,7 @@ const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
     style,
     visible,
     wrapperStyle,
+    caretStyle,
   },
   ref
 ) {
@@ -223,6 +225,7 @@ const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
             <Popover
               {...sharedPopoverProps}
               forceInitialAnimation
+              caretStyle={caretStyle}
               visible={isPopoverVisible}
               style={[
                 {

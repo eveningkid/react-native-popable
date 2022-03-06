@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View, ViewProps } from 'react-native';
+import { Animated, StyleSheet, Text, View, ViewProps} from 'react-native';
 import Caret from './Caret';
 import { ANIMATION_DURATION } from './constants';
 import {
@@ -21,6 +21,7 @@ export type PopoverProps = {
   forceInitialAnimation?: boolean;
   numberOfLines?: number;
   visible?: boolean;
+  caretStyle: ViewProps['style'];
   position?: 'top' | 'right' | 'bottom' | 'left';
 } & ViewProps;
 
@@ -35,6 +36,7 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
     forceInitialAnimation = false,
     numberOfLines,
     visible = true,
+    caretStyle = null,
     position = 'bottom',
     style,
     ...extraProps
@@ -84,7 +86,7 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
       align={caretPosition}
       position={position}
       backgroundColor={backgroundColor}
-      style={styles.caret}
+      style={[styles.caret, caretStyle]}
     />
   );
 
