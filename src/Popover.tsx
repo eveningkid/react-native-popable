@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View, ViewProps} from 'react-native';
+import { Animated, StyleSheet, Text, View, ViewProps } from 'react-native';
 import Caret from './Caret';
 import { ANIMATION_DURATION } from './constants';
 import {
