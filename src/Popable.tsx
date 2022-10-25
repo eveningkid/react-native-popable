@@ -243,7 +243,7 @@ const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
         ref={popoverRef}
         {...sharedPopoverProps}
         onLayout={handlePopoverLayout}
-        visible={Platform.OS === 'web' ? isPopoverVisible : false}
+        visible={isPopoverVisible}
         style={[
           computedPosition === 'top' && styles.popoverTop,
           computedPosition === 'bottom' && styles.popoverBottom,
