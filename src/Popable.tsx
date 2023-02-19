@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -26,6 +27,7 @@ export type PopableProps = {
   backgroundColor?: PopoverProps['backgroundColor'];
   caret?: PopoverProps['caret'];
   caretPosition?: PopoverProps['caretPosition'];
+  caretStyle?: ViewProps['style'];
   children: any;
   content: PopoverProps['children'];
   numberOfLines?: PopoverProps['numberOfLines'];
@@ -53,6 +55,7 @@ const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
     children,
     caret,
     caretPosition,
+    caretStyle,
     content,
     numberOfLines,
     onAction,
@@ -75,12 +78,19 @@ const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
   const [childrenLayout, setChildrenLayout] = useState(DEFAULT_LAYOUT);
   const [computedPosition, setComputedPosition] = useState(position);
   const isInteractive = typeof visible === 'undefined';
-  const isPopoverVisible = isInteractive ? popoverVisible : visible;
+  const isPopoverVisible = useMemo(() => {
+    return isInteractive ? popoverVisible : visible;
+  }, [isInteractive, popoverVisible, visible]);
   const childrenRef = useRef<View>(null);
   const popoverRef = useRef<View>(null);
 
   useImperativeHandle(ref, () => ({
-    show: () => setPopoverVisible(true),
+    show: () => {
+      popoverRef.current?.measure((_x, _y, _width, _height, pageX, pageY) => {
+        setPopoverPagePosition({ left: pageX, top: pageY });
+      });
+      setPopoverVisible(true);
+    },
     hide: () => setPopoverVisible(false),
   }));
 
@@ -197,6 +207,7 @@ const Popable = forwardRef<PopableManager, PopableProps>(function Popable(
     backgroundColor,
     caret,
     caretPosition,
+    caretStyle,
     children: content,
     numberOfLines,
     position: computedPosition,

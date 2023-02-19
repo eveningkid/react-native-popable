@@ -17,6 +17,7 @@ export type PopoverProps = {
   backgroundColor?: string;
   caret?: boolean;
   caretPosition?: 'left' | 'center' | 'right';
+  caretStyle?: ViewProps['style'];
   children: string | React.ReactElement;
   forceInitialAnimation?: boolean;
   numberOfLines?: number;
@@ -31,6 +32,7 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
     backgroundColor,
     caret: withCaret = true,
     caretPosition = 'center',
+    caretStyle = {},
     children,
     forceInitialAnimation = false,
     numberOfLines,
@@ -84,7 +86,7 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
       align={caretPosition}
       position={position}
       backgroundColor={backgroundColor}
-      style={styles.caret}
+      style={[styles.caret, caretStyle]}
     />
   );
 
