@@ -17,6 +17,7 @@ export type PopoverProps = {
   backgroundColor?: string;
   caret?: boolean;
   caretPosition?: 'left' | 'center' | 'right';
+  caretStyle?: ViewProps['style'];
   children: string | React.ReactElement;
   forceInitialAnimation?: boolean;
   numberOfLines?: number;
@@ -31,6 +32,7 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
     backgroundColor,
     caret: withCaret = true,
     caretPosition = 'center',
+    caretStyle = {},
     children,
     forceInitialAnimation = false,
     numberOfLines,
@@ -50,41 +52,38 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
     )
   ).current;
 
-  useEffect(
-    () => {
-      let animation: Animated.CompositeAnimation | undefined;
+  useEffect(() => {
+    let animation: Animated.CompositeAnimation | undefined;
 
-      if (animated) {
-        if (visible && (!prevVisible.current || forceInitialAnimation)) {
-          animation = Animated[animationType](opacity, {
-            toValue: 1,
-            duration: ANIMATION_DURATION,
-            useNativeDriver: true,
-          });
-        } else if (!visible && (prevVisible.current || forceInitialAnimation)) {
-          animation = Animated[animationType](opacity, {
-            toValue: 0,
-            duration: ANIMATION_DURATION,
-            useNativeDriver: true,
-          });
-        }
-
-        animation?.start();
+    if (animated) {
+      if (visible && (!prevVisible.current || forceInitialAnimation)) {
+        animation = Animated[animationType](opacity, {
+          toValue: 1,
+          duration: ANIMATION_DURATION,
+          useNativeDriver: true,
+        });
+      } else if (!visible && (prevVisible.current || forceInitialAnimation)) {
+        animation = Animated[animationType](opacity, {
+          toValue: 0,
+          duration: ANIMATION_DURATION,
+          useNativeDriver: true,
+        });
       }
 
-      prevVisible.current = visible;
+      animation?.start();
+    }
 
-      return () => animation?.stop();
-    },
-    [visible] // eslint-disable-line react-hooks/exhaustive-deps
-  );
+    prevVisible.current = visible;
+
+    return () => animation?.stop();
+  }, [visible]);
 
   const caret = (
     <Caret
       align={caretPosition}
       position={position}
       backgroundColor={backgroundColor}
-      style={styles.caret}
+      style={[styles.caret, caretStyle]}
     />
   );
 
@@ -144,22 +143,22 @@ const Popover = React.forwardRef<View, PopoverProps>(function Popover(
 });
 
 const styles = StyleSheet.create({
+  caret: {
+    zIndex: 0,
+  },
   container: {
-    width: POPOVER_WIDTH,
     overflow: 'hidden',
+    width: POPOVER_WIDTH,
   },
   containerHorizontal: {
     flexDirection: 'row',
   },
   content: {
-    flex: 1,
-    zIndex: 1,
     backgroundColor: POPOVER_BACKGROUND_COLOR,
     borderRadius: BORDER_RADIUS * 2,
+    flex: 1,
     overflow: 'hidden',
-  },
-  contentTextOnly: {
-    padding: POPOVER_PADDING,
+    zIndex: 1,
   },
   contentText: {
     color: POPOVER_FONT_COLOR,
@@ -167,8 +166,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  caret: {
-    zIndex: 0,
+  contentTextOnly: {
+    padding: POPOVER_PADDING,
   },
 });
 

@@ -6,7 +6,7 @@ import {
   Pressable,
   StyleSheet,
 } from 'react-native';
-import { ANIMATION_DURATION } from '../constants';
+// import { ANIMATION_DURATION } from '../constants';
 import type { BackdropProps } from './Backdrop.d';
 
 // On iOS, Modal orientations need to be manually specified
@@ -34,7 +34,8 @@ export default function Backdrop({
     if (visible) {
       setDelayedVisible(true);
     } else {
-      setTimeout(() => setDelayedVisible(false), ANIMATION_DURATION);
+      setDelayedVisible(false);
+      // setTimeout(() => setDelayedVisible(false), ANIMATION_DURATION);
     }
   }, [visible]);
 
