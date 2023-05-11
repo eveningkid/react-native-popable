@@ -14,7 +14,12 @@ export type CaretProps = {
   style?: ViewProps['style'];
 };
 
-export default ({ align, backgroundColor, position, style }: CaretProps) => {
+export default function Caret({
+  align,
+  backgroundColor,
+  position,
+  style,
+}: CaretProps) {
   return (
     <View
       style={[
@@ -43,42 +48,42 @@ export default ({ align, backgroundColor, position, style }: CaretProps) => {
       ]}
     />
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    width: CARET_SIDE_SIZE * 2,
-    height: CARET_SIDE_SIZE * 2,
-    borderWidth: CARET_SIDE_SIZE,
     // borderColor: "transparent",
+    borderBottomColor: 'transparent',
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
+    borderWidth: CARET_SIDE_SIZE,
+    height: CARET_SIDE_SIZE * 2,
+    width: CARET_SIDE_SIZE * 2,
   },
-  containerPositionTop: {
-    marginTop: (CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2) * -1,
-    marginBottom: CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2,
-    top: CARET_SIDE_SIZE / 2 + 1,
-  },
-  containerPositionBottom: {
-    marginBottom: (CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2) * -1,
-    marginTop: CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2,
-    bottom: CARET_SIDE_SIZE / 2 + 1,
-  },
-  containerPositionLeft: {
-    marginLeft: (CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2) * -1,
-    marginRight: CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2,
-    left: CARET_SIDE_SIZE / 2 + 1,
-  },
-  containerPositionRight: {
-    marginRight: (CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2) * -1,
-    marginLeft: CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2,
-    right: CARET_SIDE_SIZE / 2 + 1,
-  },
-  containerLeft: {},
   containerCenter: {
     alignSelf: 'center',
+  },
+  containerLeft: {},
+  containerPositionBottom: {
+    bottom: CARET_SIDE_SIZE / 2,
+    marginBottom: (CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2) * -1,
+    marginTop: CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2,
+  },
+  containerPositionLeft: {
+    left: CARET_SIDE_SIZE / 2,
+    marginLeft: (CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2) * -1,
+    marginRight: CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2,
+  },
+  containerPositionRight: {
+    marginLeft: CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2,
+    marginRight: (CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2) * -1,
+    right: CARET_SIDE_SIZE / 2,
+  },
+  containerPositionTop: {
+    marginBottom: CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2,
+    marginTop: (CARET_SIDE_SIZE / 2 + BORDER_RADIUS / 2) * -1,
+    top: CARET_SIDE_SIZE / 2,
   },
   containerRight: {
     alignSelf: 'flex-end',
