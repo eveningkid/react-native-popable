@@ -26,7 +26,7 @@ export type PopableProps = {
   backgroundColor?: PopoverProps['backgroundColor'];
   caret?: PopoverProps['caret'];
   caretPosition?: PopoverProps['caretPosition'];
-  children: any;
+  children: PopoverProps['children'];
   content: PopoverProps['children'];
   numberOfLines?: PopoverProps['numberOfLines'];
   onAction?: (visible: boolean) => void;
